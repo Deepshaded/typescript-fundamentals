@@ -2,13 +2,133 @@ import { productsURL } from '../lib';
 
 const prefix = '🐉 ';
 
+type itemType={
+     id:number;
+     name:string;
+     icon?:string; //optional of type string
+}
+
+export default async function updateOutput(id:string) {
+  const products=await getNewProducts();
+  const output=document.querySelector(`#${id}`);
+  const html = layoutNewProducts(products);
+
+  if(output && html){
+    output.innerHTML=html;
+  }
+}
+
+async function getNewProducts():Promise<itemType[]>{
+  const response:Response =await fetch(productsURL);
+  const products: itemType[]=await response.json();
+  return products;
+}
+
+function layoutNewProducts(products: itemType[]) {
+  const items = products.map((p) => {
+    const productHtml = `
+    <span class="card-id">#${p.id}</span>
+      <i class="card-icon ${p.icon} fa-lg"></i>
+    <span class="card-name">${p.name}</span>
+    `;
+    const cardHtml = `
+    <li>
+        <div class="card">
+            <div class="card-content">
+                <div class="content">
+                ${productHtml}
+                </div>
+            </div>
+        </div>
+    </li>
+    `;
+    return cardHtml;
+  });
+  let productsHtml = `<ul>${items.join('')}</ul>`;
+  return productsHtml;
+}
+
+learnSamples();
+
+function learnSamples(){
+    //hoisting
+function displayProductInfo(id:number,name:string){
+console.log(`${prefix} typed parameters`);
+console.log(`product id=${id} and name=${name}`)
+}
+displayProductInfo(10,'Pizza');
+
+console.log('Function declaration');
+console.log(addNoDeclaration(10,80));
+
+//function declaration
+function addNoDeclaration(x:number,y:number):number{
+    const sum:number=x+y;
+    return sum;
+}
+
+//function Expression is not hoisted
+const addNoExpression=function(a:number,b:number):number{
+    const sum:number=a+b;
+    return sum;
+}
+console.log('Function expression'); //has to be used after declaration
+console.log(addNoExpression(77,80));
+
+
+  const newProducts = [
+    {
+      id: 10,
+      name: 'Pepperoni Pizza',
+      icon: 'fas fa-pizza-slice',
+    },
+    {
+      id: 20,
+      name: 'Chocolate Ice cream',
+      icon: 'fas fa-ice-cream',
+    },
+    {
+      id: 30,
+      name: 'Cheese',
+      icon: 'fas fa-cheese',
+    },
+  ];
+
+  function getNewProducts(){
+    return newProducts.map((p)=>p.name);
+  }
+  console.log('Returning array value');  
+  console.log(getNewProducts());
+
+
+  function getItemById(id:number):itemType
+  |undefined{ //we have to keep undefined here as the find method may not find matching data
+    return newProducts.find(p=>id===p.id);
+  }
+
+  console.log('getItemById');  
+  console.log(getItemById(100));
+
+  function displayNewProducts(products:itemType[]):void{ //giving void return type optional
+    const productName=products.map(p=>{
+      const name=p.name.toLowerCase();
+      return name;
+    })
+    const msg=`Sample product includes: ${productName.join(',')}`;
+    console.log('VOID RETURN TYPE');
+    console.log(msg);
+  }
+
+  displayNewProducts(newProducts);
+}
+
 type ProductType = {
   id: number;
   name: string;
   icon?: string;
 };
 
-export default async function updateOutput(id: string = 'output') {
+export async function updateOutputOld(id: string = 'output') {
   const products = await getProducts();
   const output = document.querySelector(`#${id}`);
   const html = layoutProducts(products);
