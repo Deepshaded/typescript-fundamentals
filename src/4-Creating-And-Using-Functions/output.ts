@@ -5,7 +5,7 @@ const prefix = '🐉 ';
 type itemType={
      id:number;
      name:string;
-     icon?:string; //optional of type string
+     icon?:string; //optional parameter of type string
 }
 
 export default async function updateOutput(id:string) {
@@ -25,7 +25,7 @@ async function getNewProducts():Promise<itemType[]>{
 }
 
 function layoutNewProducts(products: itemType[]) {
-  const items = products.map((p) => {
+  const items = products.map((p) => { 
     const productHtml = `
     <span class="card-id">#${p.id}</span>
       <i class="card-icon ${p.icon} fa-lg"></i>
@@ -104,13 +104,27 @@ console.log(addNoExpression(77,80));
   function getItemById(id:number):itemType
   |undefined{ //we have to keep undefined here as the find method may not find matching data
     return newProducts.find(p=>id===p.id);
+
+    newProducts.find( //same as above arrow func
+      function(p){
+        return id===p.id
+      });
   }
+
+  //arrow function exmaple
+  const getItemByName2=(id:number):itemType|undefined=> newProducts.find(p=>id===p.id);
+  getItemByName2(20);
 
   console.log('getItemById');  
   console.log(getItemById(100));
 
   function displayNewProducts(products:itemType[]):void{ //giving void return type optional
-    const productName=products.map(p=>{
+    const productName=products.map((p:itemType)=>{
+      const name=p.name.toLowerCase();
+      return name;
+    })
+
+    const productName2=products.map(function(p){//same as above arrow func
       const name=p.name.toLowerCase();
       return name;
     })
@@ -120,6 +134,18 @@ console.log(addNoExpression(77,80));
   }
 
   displayNewProducts(newProducts);
+
+  const idgenerator=(max:number)=>Math.floor(Math.random()*max);
+
+  function addNewProduct(name:string,icon?:string):itemType{
+    const id=idgenerator(1000);
+    return {id,name,icon,}
+  }
+
+  console.log('Optional parameters');
+  let kiwi=addNewProduct('kiwi','kiwi.jpg');
+  let grape=addNewProduct('grape');
+  console.log(kiwi,grape);
 }
 
 type ProductType = {
@@ -139,7 +165,7 @@ export async function updateOutputOld(id: string = 'output') {
 }
 
 function layoutProducts(products: ProductType[]) {
-  const items = products.map(({ id, name, icon }) => {
+  const items = products.map(({ id, name, icon }) => {//destructring
     const productHtml = `
     <span class="card-id">#${id}</span>
       <i class="card-icon ${icon} fa-lg"></i>
@@ -284,7 +310,7 @@ function runTheLearningSamples() {
     };
   }
 
-  const { floor, random } = Math;
+  const { floor, random } = Math;//destructuring
   const getRandomInt = (max: number = 1000) => floor(random() * max);
 
   console.log(`${prefix} Optional parameters`);
@@ -322,6 +348,7 @@ function runTheLearningSamples() {
     city: string,
     ...restOfAddress: string[]
   ) {
+    console.table(restOfAddress);
     const address = `${street}, ${city} ${restOfAddress.join(' ')}`;
     return address;
   }
@@ -329,9 +356,9 @@ function runTheLearningSamples() {
   const someAddress = buildAddress(
     '1 lois lane',
     'smallville',
-    'apt 101', // rest
-    'area 51', // rest
-    'mystery country', // rest
+    'apt 101', // rest arg[0]
+    'area 51', // rest arg[1]
+    'mystery country', // rest [2]
   );
 
   console.log(`${prefix} Rest parameters`);
