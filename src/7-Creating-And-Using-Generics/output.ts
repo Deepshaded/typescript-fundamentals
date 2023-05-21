@@ -16,16 +16,21 @@ class GenericModel<T extends HasId> {
   }
 
   getItemById(id: number): T | undefined {
-    return this.items ? this.items.find((p) => (id === p.id)) : undefined;
+    return this.items ? this.items.find((p) => (id === p.id)) : undefined;// if we dont do <T extends HasId>, here we get error as TS wont know the type of id
   }
 }
 
+interface Customer {
+  id: number;
+  name: string;
+} 
 const foodModel = new GenericModel<FoodProduct>(productsURL);
+const custModel = new GenericModel<Customer>(customersURL);
 
 export default async function updateOutput(id: string = 'output') {
-  // const products = await getProducts();
-  // const products = await getList<FoodProduct>(productsURL);
-  const products = await foodModel.getItems();
+  // const products = await getProducts(); 1. getting data simply
+  // const products = await getList<FoodProduct>(productsURL); 2. getting data using generic type
+  const products = await foodModel.getItems();  //3. getting data with Generic class
 
   const output = document.querySelector(`#${id}`);
   const html = layoutProducts(products);
@@ -176,12 +181,12 @@ async function runTheLearningSamples() {
   await model.getItems();
   const foodItem: Readonly<FoodProduct | undefined> = model.getItemById(10);
   if (foodItem) {
-    // foodItem.name = 'some name';
+    // foodItem.name = 'some name'; we cannot fetch and then change the values aswe made is readOnly
     // foodItem.icon = 'some icon';
   }
 
   // Partial<T> constraint
   const pear = { name: 'pear' };
-  // const pearFood: FoodProduct = pear;
+  // const pearFood: FoodProduct = pear; doesnt work as we need to give all Foodproduct properties
   const pearFood: Partial<FoodProduct> = pear;
 }

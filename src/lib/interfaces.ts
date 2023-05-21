@@ -4,7 +4,14 @@ export interface Product {
   icon: string;
   description?: string;
   validate(): boolean;
+ // placeOrder(id:number):boolean //fuction in interface
 }
+
+// let product2:Product={
+//   id:12,
+//   name:'Product',
+//   icon:'sample.jpg',
+// }
 
 // Examples of using a type alias
 type ProductAlias =
@@ -25,5 +32,5 @@ enum ProductType {
   Home,
 }
 
-type ProductTypeList = 'SPORTING' | 'HOME';
+type ProductTypeList = 'SPORTING' | 'HOME'; //string literal type
 let p: ProductTypeList = 'SPORTING';
